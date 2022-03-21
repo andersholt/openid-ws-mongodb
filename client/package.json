@@ -1,0 +1,23 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "parcel watch index.html",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install --include=dev && npm run build:parcel",
+    "build:parcel": "parcel build index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@parcel/transformer-react-refresh-wrap": "^2.3.2",
+    "parcel": "^2.3.2",
+    "prettier": "^2.6.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.2",
+    "save-dev": "^0.0.1-security"
+  }
+}
