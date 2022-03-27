@@ -4,7 +4,12 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import fetch from "node-fetch"
+import {MoviesApi} from "./moviesApi.js";
+import {MongoClient} from "mongodb";
 dotenv.config()
+
+const mongoClient = new MongoClient(process.env.MONGODB_URL)
+
 
 const app = express();
 
@@ -42,11 +47,8 @@ app.get("/api/login", async (req, res) => {
         Authorization: `Bearer ${access_token}`
       }
     });
-
     res.json(userinfo)
   }
-
-
 })
 
 app.post("/api/login", (req, res) =>{
@@ -64,6 +66,10 @@ app.use((req, res, next) => {
     next();
   }
 });
+
+
+app.use("/api/movies", MoviesApi());
+
 
 const server = app.listen(process.env.PORT || 3000, () =>
   console.log("http://localhost:" + server.address().port)

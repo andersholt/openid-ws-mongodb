@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import ReactDOM from "react-dom";
 import {BrowserRouter, Link, Route, Routes, useNavigate} from "react-router-dom";
 
@@ -8,6 +8,7 @@ class FrontPage extends React.Component {
       <div>
           <Navbar/>
           <h1>Frontpage</h1>
+          <Link to={"/movies"}>Movies</Link>
       </div>
     );
   }
@@ -23,7 +24,6 @@ function Navbar(){
 }
 
 function LogOut(){
-    console.log("hello")
     fetch("/api/logout")
     cookies.set('testtoken', {expires: Date.now()});
 }
@@ -34,13 +34,10 @@ async function fetchJSON(url){
     }
     return await res.json();
 }
-//logge ut: resette cookies
 
 function Login() {
 
     const [redirectUrl, setRedirectUrl] = useState();
-    // vi redirecter siden til en annen side
-    //https://accounts.google.com/.well-known/openid-configuration
     useEffect(async() => {
         const {authorization_endpoint} =
             await fetchJSON("https://accounts.google.com/.well-known/openid-configuration");
@@ -123,6 +120,25 @@ function Profile() {
         </div>
 }
 
+function ListMovies() {
+    const {loading, data, error} = useLoader(async () => {
+        return await fetchJSON("/api/movies");
+    });
+
+    if (loading){
+        return(<div>Loading...</div>)
+    }
+    if (error){
+        return(<div>{error.toString()}</div>)
+    }
+
+    return (<div>
+        <h1>Movies in the database:</h1>
+        <p>{data.map((movie) => (<li key={movie.title}>{movie.title}</li>))}</p>
+
+    </div>);
+}
+
 function Application() {
   return (
     <BrowserRouter>
@@ -133,6 +149,7 @@ function Application() {
     path={"/login/callback"}
     element={<LoginCallback/>}
     />
+          <Route path={"/movies"} element={<ListMovies/>}/>
         <Route path={"/profile"} element={<Profile/>}/>
       </Routes>
     </BrowserRouter>
