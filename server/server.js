@@ -9,16 +9,15 @@ import { MongoClient } from "mongodb";
 dotenv.config();
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
+const app = express();
+app.use(bodyParser.json());
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
 mongoClient.connect().then(async () => {
   console.log("Connected to MongoDB");
   const databases = await mongoClient.db().admin().listDatabases();
   app.use("/api/movies", MoviesApi(mongoClient.db("movieDatabase")));
 });
-
-const app = express();
-
-app.use(bodyParser.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
 
 async function fetchJSON(url, options) {
   const res = await fetch(url, options);
