@@ -9,7 +9,11 @@ import { MongoClient } from "mongodb";
 dotenv.config();
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
-mongoClient.connect();
+mongoClient.connect().then(async () => {
+  console.log("Connected to MongoDB");
+  const databases = await mongoClient.db().admin().listDatabases();
+  app.use("/api/movies", MoviesApi(mongoClient.db("movieDatabase")));
+});
 
 const app = express();
 
@@ -64,8 +68,6 @@ app.use((req, res, next) => {
     next();
   }
 });
-
-app.use("/api/movies", MoviesApi());
 
 const server = app.listen(process.env.PORT || 3000, () =>
   console.log("http://localhost:" + server.address().port)

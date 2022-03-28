@@ -1,15 +1,9 @@
 import { Router } from "express";
 
-const movies = [
-  { title: "Movie1" },
-  { title: "Movie2" },
-  { title: "Movie3" },
-  { title: "Movie4" },
-];
-
-export function MoviesApi() {
+export function MoviesApi(mongoDatabase) {
   const router = new Router();
-  router.get("/", (req, res) => {
+  router.get("/", async (req, res) => {
+    const movies = await mongoDatabase.collection("movies").find().toArray();
     res.json(movies);
   });
 
