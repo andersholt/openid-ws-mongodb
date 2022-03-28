@@ -34,22 +34,17 @@ app.get("/api/logout", (req, res) => {
 
 app.get("/api/login", async (req, res) => {
   const { access_token } = req.signedCookies;
-  console.log(access_token);
 
-  if (typeof access_token === "undefined") {
-    res.send(401);
-  } else {
-    const { userinfo_endpoint } = await fetchJSON(
-      "https://accounts.google.com/.well-known/openid-configuration"
-    );
+  const { userinfo_endpoint } = await fetchJSON(
+    "https://accounts.google.com/.well-known/openid-configuration"
+  );
 
-    const userinfo = await fetchJSON(userinfo_endpoint, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-    res.json(userinfo);
-  }
+  const userinfo = await fetchJSON(userinfo_endpoint, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+  res.json(userinfo);
 });
 
 app.post("/api/login", (req, res) => {
