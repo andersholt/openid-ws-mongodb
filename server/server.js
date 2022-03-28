@@ -6,12 +6,10 @@ import cookieParser from "cookie-parser";
 import fetch from "node-fetch";
 import { MoviesApi } from "./moviesApi.js";
 import { MongoClient } from "mongodb";
-import compression from "compression";
 dotenv.config();
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
 const app = express();
-app.use(compression());
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
