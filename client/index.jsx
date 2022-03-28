@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter,
@@ -8,32 +8,39 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-class FrontPage extends React.Component {
-  render() {
-    return (
-      <div>
-        <Navbar />
-        <h1>Frontpage</h1>
-        <Link to={"/movies"}>Movies</Link>
-      </div>
-    );
-  }
-}
+const ProfileContext = React.createContext({
+  userinfo: undefined,
+});
 
-function Navbar() {
+function FrontPage({ reload }) {
+  const { userinfo } = useContext(ProfileContext);
+  console.log(userinfo);
+
+  async function handleLogout() {
+    await fetch("/api/login", { method: "delete" });
+    reload();
+  }
   return (
-    <div style={{ right: "20px", position: "absolute" }}>
-      <Link to={"/"}>Home</Link>
-      <Link to={"/login"}>Login</Link>
-      <Link to={"/profile"}>Profile</Link>
-      <button onClick={LogOut}>Log out</button>
+    <div>
+      {!userinfo && (
+        <div>
+          <Link to={"/login"}>Log in</Link>
+        </div>
+      )}
+      {userinfo && (
+        <div>
+          <Link to={"/profile"}>Profile for {userinfo.name}</Link>
+        </div>
+      )}
+      {userinfo && (
+        <div>
+          <button onClick={handleLogout}>Log out</button>
+        </div>
+      )}
     </div>
   );
 }
 
-function LogOut() {
-  fetch("/api/logout");
-}
 async function fetchJSON(url) {
   const res = await fetch(url);
   if (!res.ok) {
@@ -43,46 +50,40 @@ async function fetchJSON(url) {
 }
 
 function Login() {
-  const [redirectUrl, setRedirectUrl] = useState();
+  const { oauth_config } = useContext(ProfileContext);
   useEffect(async () => {
-    const { authorization_endpoint } = await fetchJSON(
-      "https://accounts.google.com/.well-known/openid-configuration"
-    );
-    const parameters = {
+    const { discovery_url, client_id, scope } = oauth_config;
+    const discoveryDocument = await fetchJSON(discovery_url);
+    const { authorization_endpoint } = discoveryDocument;
+    const params = {
       response_type: "token",
-      client_id:
-        "648988810596-n45hi87esjm736l10koiua8gm3bcd9v9.apps.googleusercontent.com",
-      scope: "email profile",
+      response_mode: "fragment",
+      scope,
+      client_id,
       redirect_uri: window.location.origin + "/login/callback",
     };
-
-    setRedirectUrl(
-      authorization_endpoint + "?" + new URLSearchParams(parameters)
-    );
+    window.location.href =
+      authorization_endpoint + "?" + new URLSearchParams(params);
   }, []);
-
-  return (
-    <div>
-      <Navbar />
-      <h1>Login updated!</h1>
-      <a href={redirectUrl}>Do login</a>
-    </div>
-  );
+  return <h1>Please wait</h1>;
 }
 
-function LoginCallback() {
+function LoginCallback({ reload }) {
   const navigate = useNavigate();
-  useEffect(() => {
+  useEffect(async () => {
     const { access_token } = Object.fromEntries(
       new URLSearchParams(window.location.hash.substring(1))
     );
-    fetch("/api/login", {
+    const res = await fetch("/api/login", {
       method: "POST",
-      body: JSON.stringify({ access_token }),
+      body: new URLSearchParams({ access_token }),
     });
-    navigate("/");
+    if (res.ok) {
+      reload();
+      navigate("/");
+    }
   });
-  return <h1>Please wait ...</h1>;
+  return <h1>Loading ...</h1>;
 }
 
 function useLoader(loadingFn) {
@@ -106,27 +107,16 @@ function useLoader(loadingFn) {
 }
 
 function Profile() {
-  const { loading, data, error } = useLoader(async () => {
-    return await fetchJSON("/api/login");
-  });
-
-  if (loading) {
-    return <div>Please wait ...</div>;
-  }
-  if (error) {
-    return <div>Error! {error.toString()}</div>;
-  }
+  const { userinfo } = useContext(ProfileContext);
 
   return (
     <div>
-      <Navbar />
       <h1>
-        Profile for {data.name} ({data.email})
+        Profile for {userinfo.name} ({userinfo.email})
       </h1>
       <div>
-        <img src={data.picture} alt="Profile picture" />
+        <img src={userinfo.picture} alt="Profile picture" />
       </div>
-      <div>{JSON.stringify(data)}</div>
     </div>
   );
 }
@@ -158,16 +148,39 @@ function ListMovies() {
 }
 
 function Application() {
+  const [loading, setLoading] = useState(true);
+  const [login, setLogin] = useState();
+  useEffect(loadLoginInfo, []);
+
+  async function loadLoginInfo() {
+    setLoading(true);
+    setLogin(await fetchJSON("/api/login"));
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    console.log({ login });
+  }, [login]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path={"/"} element={<FrontPage />} />
-        <Route path={"/login"} element={<Login />} />
-        <Route path={"/login/callback"} element={<LoginCallback />} />;
-        <Route path={"/movies"} element={<ListMovies />} />
-        <Route path={"/profile"} element={<Profile />} />
-      </Routes>
-    </BrowserRouter>
+    <ProfileContext.Provider value={login}>
+      <BrowserRouter>
+        <Routes>
+          <Route path={"/"} element={<FrontPage reload={loadLoginInfo} />} />
+          <Route path={"/profile"} element={<Profile />} />
+          <Route path={"/login"} element={<Login />} />
+          <Route path={"/movies"} element={<ListMovies />} />
+          <Route
+            path={"/login/callback"}
+            element={<LoginCallback reload={loadLoginInfo} />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </ProfileContext.Provider>
   );
 }
 
