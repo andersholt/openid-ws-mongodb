@@ -33,7 +33,6 @@ function Navbar() {
 
 function LogOut() {
   fetch("/api/logout");
-  cookies.set("testtoken", { expires: Date.now() });
 }
 async function fetchJSON(url) {
   const res = await fetch(url);
@@ -56,6 +55,7 @@ function Login() {
       scope: "email profile",
       redirect_uri: window.location.origin + "/login/callback",
     };
+
     setRedirectUrl(
       authorization_endpoint + "?" + new URLSearchParams(parameters)
     );
@@ -66,7 +66,6 @@ function Login() {
       <Navbar />
       <h1>Login updated!</h1>
       <a href={redirectUrl}>Do login</a>
-      <div>{redirectUrl}</div>
     </div>
   );
 }
@@ -77,8 +76,6 @@ function LoginCallback() {
     const { access_token } = Object.fromEntries(
       new URLSearchParams(window.location.hash.substring(1))
     );
-    console.log(access_token);
-
     fetch("/api/login", {
       method: "POST",
       headers: {
@@ -122,6 +119,7 @@ function Profile() {
   if (error) {
     return <div>Error! {error.toString()}</div>;
   }
+
   return (
     <div>
       <Navbar />
@@ -151,11 +149,13 @@ function ListMovies() {
   return (
     <div>
       <h1>Movies in the database:</h1>
-      <p>
-        {data.map((movie) => (
-          <li key={movie.title}>{movie.title}</li>
-        ))}
-      </p>
+
+      {data.map((movie, index) => (
+        <div key={index}>
+          <li>{movie.title}</li>
+          <img src={movie.poster} style={{ width: "200px" }} />
+        </div>
+      ))}
     </div>
   );
 }

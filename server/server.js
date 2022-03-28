@@ -6,17 +6,22 @@ import cookieParser from "cookie-parser";
 import fetch from "node-fetch";
 import { MoviesApi } from "./moviesApi.js";
 import { MongoClient } from "mongodb";
+import compression from "compression";
 dotenv.config();
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
 const app = express();
+app.use(compression());
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 mongoClient.connect().then(async () => {
   console.log("Connected to MongoDB");
   const databases = await mongoClient.db().admin().listDatabases();
-  app.use("/api/movies", MoviesApi(mongoClient.db("movieDatabase")));
+  app.use(
+    "/api/movies",
+    MoviesApi(mongoClient.db(process.env.MONGO_DATABASE || "sample_mflix"))
+  );
 });
 
 async function fetchJSON(url, options) {
@@ -32,19 +37,23 @@ app.get("/api/logout", (req, res) => {
   res.sendStatus(200);
 });
 
-app.get("/api/login", async (req, res) => {
+app.get("/api/login", async (req, res, next) => {
   const { access_token } = req.signedCookies;
 
-  const { userinfo_endpoint } = await fetchJSON(
-    "https://accounts.google.com/.well-known/openid-configuration"
-  );
+  if (typeof access_token === "undefined") {
+    res.sendStatus(401);
+  } else {
+    const { userinfo_endpoint } = await fetchJSON(
+      "https://accounts.google.com/.well-known/openid-configuration"
+    );
 
-  const userinfo = await fetchJSON(userinfo_endpoint, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-  res.json(userinfo);
+    const userinfo = await fetchJSON(userinfo_endpoint, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    res.json(userinfo);
+  }
 });
 
 app.post("/api/login", (req, res) => {
