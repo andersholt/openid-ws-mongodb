@@ -78,9 +78,6 @@ function LoginCallback() {
     );
     fetch("/api/login", {
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
       body: JSON.stringify({ access_token }),
     });
     navigate("/");
