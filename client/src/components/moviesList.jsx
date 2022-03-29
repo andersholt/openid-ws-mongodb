@@ -12,12 +12,12 @@ export function ListMovies() {
   if (error) {
     return <div>{error.toString()}</div>;
   }
-
   return (
     <div>
       {data.map((movie, index) => (
         <div key={index}>
-          <li>{movie.title}</li>
+          <h4>{movie.title}</h4>
+          <p>Rating: {movie.imdb.rating}</p>
           <img src={movie.poster} style={{ width: "200px" }} />
         </div>
       ))}

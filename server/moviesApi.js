@@ -6,12 +6,13 @@ export function MoviesApi(mongoDatabase) {
     const movies = await mongoDatabase
       .collection("movies")
       .find()
-      .map(({ title, year, plot, genre, poster }) => ({
+      .map(({ title, year, plot, genre, poster, imdb }) => ({
         title,
         year,
         plot,
         genre,
         poster,
+        imdb,
       }))
       .limit(50)
       .toArray();

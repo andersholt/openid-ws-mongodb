@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { fetchJSON } from "./global";
 import { useNavigate } from "react-router-dom";
 
-export function Login() {
+export function LoginHook() {
   const { oauth_config } = useContext(ProfileContext);
   useEffect(async () => {
     const { discovery_url, client_id, scope } = oauth_config;

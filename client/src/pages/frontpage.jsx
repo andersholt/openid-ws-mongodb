@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
-import { ProfileContext } from "../hooks/login";
+import { ProfileContext } from "../hooks/loginHook";
 import { Link } from "react-router-dom";
+import { Login } from "../components/login";
 
 export function FrontPage({ reload }) {
   const { userinfo } = useContext(ProfileContext);
@@ -12,11 +13,7 @@ export function FrontPage({ reload }) {
 
   return (
     <div>
-      {!userinfo && (
-        <div>
-          <Link to={"/login"}>Log in</Link>
-        </div>
-      )}
+      {!userinfo && <Login />}
       {userinfo && (
         <div>
           <div>
