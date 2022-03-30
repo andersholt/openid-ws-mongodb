@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ProfileContext } from "../hooks/loginHook";
 
 function ChatMessage({ chat: { author, message } }) {
@@ -11,6 +11,13 @@ function ChatMessage({ chat: { author, message } }) {
 }
 
 export function ChatApplication() {
+  const [ws, setWs] = useState();
+
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:3000");
+    setWs(ws);
+  }, []);
+
   const user = useContext(ProfileContext).userinfo.name;
 
   const [chatLog, setChatLog] = useState([
