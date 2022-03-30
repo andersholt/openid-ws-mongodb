@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import fetch from "node-fetch";
 import { MoviesApi } from "./moviesApi.js";
 import { MongoClient } from "mongodb";
+import { WebSocketServer } from "ws";
 dotenv.config();
 
 const oauth_config = {
@@ -74,6 +75,17 @@ app.use((req, res, next) => {
   }
 });
 
-const server = app.listen(process.env.PORT || 3000, () =>
-  console.log("http://localhost:" + server.address().port)
-);
+const wsServer = new WebSocketServer({ noServer: true });
+wsServer.on("connect", (socket) => {
+  socket.send("Hello");
+});
+
+const server = app.listen(process.env.PORT || 3000, () => {
+  console.log("http://localhost:" + server.address().port);
+
+  server.on("upgrade", (req, socket, head) => {
+    wsServer.handleUpgrade(req, socket, head, (socket) => {
+      wsServer.emit("connect", socket, req);
+    });
+  });
+});
