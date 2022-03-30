@@ -22,6 +22,10 @@ export function FrontPage({ reload }) {
           <div>
             <Link to={"/movies"}>Movies</Link>
           </div>
+
+          <div>
+            <Link to={"/chat"}>Chatapp</Link>
+          </div>
         </div>
       )}
       {userinfo && (

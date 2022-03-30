@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ListMovies } from "./components/moviesList";
 import { fetchJSON } from "./hooks/global";
-import { LoginHook, LoginCallback, ProfileContext } from "./hooks/loginHook";
+import { LoginCallback, LoginHook, ProfileContext } from "./hooks/loginHook";
 import { FrontPage } from "./pages/frontpage";
 import { Profile } from "./pages/profile";
 import { Movies } from "./pages/movies";
+import { ChatApplication } from "./pages/chatapp";
 
 function Application() {
   const [loading, setLoading] = useState(true);
@@ -33,6 +33,8 @@ function Application() {
         <Routes>
           <Route path={"/"} element={<FrontPage reload={loadLoginInfo} />} />
           <Route path={"/profile"} element={<Profile />} />
+          <Route path={"/chat"} element={<ChatApplication />} />
+
           <Route path={"/login"} element={<LoginHook />} />
           <Route path={"/movies"} element={<Movies />} />
           <Route
