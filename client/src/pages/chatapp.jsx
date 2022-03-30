@@ -18,13 +18,12 @@ export function ChatApplication() {
     ws.onmessage = (event) => {
       console.log(event.data);
       const { author, message } = JSON.parse(event.data);
-
       setChatLog([...chatLog, { author, message }]);
     };
     setWs(ws);
   }, []);
 
-  const user = useContext(ProfileContext).userinfo.name;
+  const userName = useContext(ProfileContext).userinfo.name;
 
   const [chatLog, setChatLog] = useState([
     { author: "Anders", message: "Hello" },
@@ -36,12 +35,15 @@ export function ChatApplication() {
 
   function handleNewMessage(event) {
     event.preventDefault();
-    setChatLog([...chatLog, { author: user, message }]);
+
+    const chatMessage = { author: userName, message };
+    ws.send(JSON.stringify(chatMessage));
+    setMessage("");
   }
 
   return (
     <>
-      <header>Chatapp for {user}</header>
+      <header>Chatapp for {userName}</header>
       <main>
         {chatLog.map((chat, index) => (
           <ChatMessage key={index} chat={chat} />

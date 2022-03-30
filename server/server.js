@@ -74,9 +74,18 @@ app.use((req, res, next) => {
   }
 });
 
+const sockets = [];
+
 const wsServer = new WebSocketServer({ noServer: true });
 wsServer.on("connect", (socket) => {
+  sockets.push(socket);
   socket.send(JSON.stringify({ author: "Server", message: "Hello there" }));
+  socket.on("message", (data) => {
+    const { author, message } = JSON.parse(data);
+    for (const recipient of sockets) {
+      recipient.send(JSON.stringify({ author, message }));
+    }
+  });
 });
 
 const server = app.listen(process.env.PORT || 3000, () => {
