@@ -18,7 +18,10 @@ export function ListMovies() {
         <div key={index}>
           <h4>{movie.title}</h4>
           <p>Rating: {movie.imdb.rating}</p>
-          <img src={movie.poster} style={{ width: "200px" }} />
+          {movie.poster && (
+            <img src={movie.poster} style={{ width: "200px" }} />
+          )}
+          <p>{movie.plot}</p>
         </div>
       ))}
     </div>

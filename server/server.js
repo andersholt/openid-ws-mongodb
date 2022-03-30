@@ -24,7 +24,11 @@ mongoClient.connect().then(async () => {
   const databases = await mongoClient.db().admin().listDatabases();
   app.use(
     "/api/movies",
-    MoviesApi(mongoClient.db(process.env.MONGO_DATABASE || "sample_mflix"))
+    MoviesApi(mongoClient.db(process.env.MONGO_MOVIEDATABASE || "sample_mflix"))
+  );
+  app.use(
+    "/api/chat",
+    MoviesApi(mongoClient.db(process.env.MONGO_CHATDATABASE || "chat_app"))
   );
 });
 

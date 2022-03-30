@@ -14,24 +14,18 @@ export function ChatApplication() {
   const [ws, setWs] = useState();
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3000");
+    const ws = new WebSocket(window.location.origin.replace(/^http/, "ws"));
     ws.onmessage = (event) => {
-      console.log(event.data);
       const { author, message } = JSON.parse(event.data);
-      setChatLog([...chatLog, { author, message }]);
+      setChatLog((oldState) => [...oldState, { author, message }]);
     };
     setWs(ws);
   }, []);
 
   const userName = useContext(ProfileContext).userinfo.name;
 
-  const [chatLog, setChatLog] = useState([
-    { author: "Anders", message: "Hello" },
-    { author: "Anders", message: "Hello" },
-    { author: "Anders", message: "Hello" },
-  ]);
-
-  const [message, setMessage] = useState();
+  const [chatLog, setChatLog] = useState([]);
+  const [message, setMessage] = useState("");
 
   function handleNewMessage(event) {
     event.preventDefault();
@@ -43,7 +37,7 @@ export function ChatApplication() {
 
   return (
     <>
-      <header>Chatapp for {userName}</header>
+      <h1>MyOpenChat</h1>
       <main>
         {chatLog.map((chat, index) => (
           <ChatMessage key={index} chat={chat} />
