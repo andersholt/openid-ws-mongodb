@@ -19,10 +19,6 @@ function Application() {
     setLoading(false);
   }
 
-  useEffect(() => {
-    console.log({ login });
-  }, [login]);
-
   if (loading) {
     return <h1>Please wait</h1>;
   }
