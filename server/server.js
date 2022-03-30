@@ -8,6 +8,9 @@ import { MoviesApi } from "./moviesApi.js";
 import { MongoClient } from "mongodb";
 import { WebSocketServer } from "ws";
 dotenv.config();
+const app = express();
+app.use(bodyParser.urlencoded());
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 const oauth_config = {
   discovery_url: "https://accounts.google.com/.well-known/openid-configuration",
@@ -24,10 +27,6 @@ mongoClient.connect().then(async () => {
     MoviesApi(mongoClient.db(process.env.MONGO_DATABASE || "sample_mflix"))
   );
 });
-
-const app = express();
-app.use(bodyParser.urlencoded());
-app.use(cookieParser(process.env.COOKIE_SECRET));
 
 async function fetchJSON(url, options) {
   const res = await fetch(url, options);
@@ -77,7 +76,7 @@ app.use((req, res, next) => {
 
 const wsServer = new WebSocketServer({ noServer: true });
 wsServer.on("connect", (socket) => {
-  socket.send("Hello");
+  socket.send(JSON.stringify({ author: "Server", message: "Hello there" }));
 });
 
 const server = app.listen(process.env.PORT || 3000, () => {

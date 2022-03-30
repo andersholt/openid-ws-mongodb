@@ -17,6 +17,9 @@ export function ChatApplication() {
     const ws = new WebSocket("ws://localhost:3000");
     ws.onmessage = (event) => {
       console.log(event.data);
+      const { author, message } = JSON.parse(event.data);
+
+      setChatLog([...chatLog, { author, message }]);
     };
     setWs(ws);
   }, []);
