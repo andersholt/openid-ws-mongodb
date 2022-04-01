@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { fetchJSON } from "./hooks/global";
-import { LoginCallback, LoginHook, ProfileContext } from "./hooks/loginHook";
+import {
+  LoginCallback,
+  LoginProvider,
+  LoginMicrosoft,
+  ProfileContext,
+} from "./components/loginProvider";
 import { FrontPage } from "./pages/frontpage";
 import { Profile } from "./pages/profile";
 import { Movies } from "./pages/movies";
@@ -30,11 +35,11 @@ function Application() {
           <Route path={"/"} element={<FrontPage reload={loadLoginInfo} />} />
           <Route path={"/profile"} element={<Profile />} />
           <Route path={"/chat"} element={<ChatApplication />} />
-
-          <Route path={"/login"} element={<LoginHook />} />
+          <Route path={"/login/google"} element={<LoginProvider />} />
+          <Route path={"/login/microsoft"} element={<LoginMicrosoft />} />
           <Route path={"/movies"} element={<Movies />} />
           <Route
-            path={"/login/callback"}
+            path={"/login/:identityProvider/callback"}
             element={<LoginCallback reload={loadLoginInfo} />}
           />
         </Routes>

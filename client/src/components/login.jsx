@@ -5,7 +5,12 @@ export function Login() {
   return (
     <div>
       <p>You need to log in to access this page!</p>
-      <Link to={"/login"}>Log in</Link>
+      <div>
+        <Link to={"/login/google"}>Log in Google</Link>
+      </div>
+      <div>
+        <Link to={"/login/microsoft"}>Log in Microsoft</Link>
+      </div>
     </div>
   );
 }

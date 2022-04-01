@@ -56,7 +56,6 @@ export function ListMovies() {
 
               {movie.countries && (
                 <>
-                  {" "}
                   {movie.countries.map((country, index) => (
                     <div key={index}> - {country} </div>
                   ))}

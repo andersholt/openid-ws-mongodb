@@ -32,9 +32,10 @@ export function MoviesApi(mongoDatabase) {
     res.json(movies);
   });
 
-  router.post("/", (req, res) => {
+  router.post("/api/movies", (req, res) => {
     const { title } = req.body;
-    mongoDatabase.collection(movies).insertOne({
+    console.log("Posting");
+    mongoDatabase.collection("movies").insertOne({
       title,
     });
     res.sendStatus(204);

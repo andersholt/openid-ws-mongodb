@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ProfileContext } from "../hooks/loginHook";
+import { ProfileContext } from "../components/loginProvider";
 import { Link } from "react-router-dom";
 import { Login } from "../components/login";
 

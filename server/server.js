@@ -12,11 +12,32 @@ const app = express();
 app.use(bodyParser.urlencoded());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-const oauth_config = {
+const oauth_config_google = {
   discovery_url: "https://accounts.google.com/.well-known/openid-configuration",
-  client_id: process.env.CLIENT_ID,
-  scope: "openid email profile",
+  client_id: process.env.CLIENT_ID_GOOGLE,
+  scope: "email profile",
 };
+
+const oauth_config_microsoft = {
+  discovery_url:
+    "https://oidc-ver1.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
+  client_id: process.env.CLIENT_ID_MICROSOFT,
+  scope: "openid profile",
+};
+
+const oauth_config = {
+  google: oauth_config_google,
+  microsoft: oauth_config_microsoft,
+};
+
+app.get("/api/config", (req, res) => {
+  res.json({
+    response_type: "token",
+    client_id,
+    discovery_endpoint,
+    scope: "email profile",
+  });
+});
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
 mongoClient.connect().then(async () => {
@@ -47,7 +68,9 @@ app.delete("/api/login", (req, res) => {
 
 app.get("/api/login", async (req, res) => {
   const { access_token } = req.signedCookies;
-  const discoveryDocument = await fetchJSON(oauth_config.discovery_url);
+
+  const discoveryDocument = await fetchJSON(oauth_config.google.discovery_url);
+
   const { userinfo_endpoint } = discoveryDocument;
   let userinfo = undefined;
   try {
@@ -59,12 +82,20 @@ app.get("/api/login", async (req, res) => {
   } catch (error) {
     console.error({ error });
   }
-  res.json({ userinfo, oauth_config }).status(200);
+  res.json({ userinfo, oauth_config: oauth_config.google }).status(200);
 });
 
-app.post("/api/login", (req, res) => {
-  const { access_token } = req.body;
-  res.cookie("access_token", access_token, { signed: true });
+app.post("/api/login/:provider", (req, res) => {
+  const { access_token, access_code } = req.body;
+  let access = "";
+
+  if (access_code !== undefined) {
+    access = access_code;
+  } else {
+    access = access_token;
+  }
+
+  res.cookie(provider + "access_token", access, { signed: true });
   res.sendStatus(200);
 });
 
@@ -90,6 +121,7 @@ wsServer.on("connect", (socket) => {
       recipient.send(JSON.stringify({ author, message }));
     }
   });
+  //wsServer.on("close")
 });
 
 const server = app.listen(process.env.PORT || 3000, () => {

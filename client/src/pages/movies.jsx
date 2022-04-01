@@ -1,7 +1,7 @@
 import { ListMovies } from "../components/moviesList";
 import { Login } from "../components/login";
 import React, { useContext } from "react";
-import { ProfileContext } from "../hooks/loginHook";
+import { ProfileContext } from "../components/loginProvider";
 import { AddMovie } from "../components/addMovie";
 
 export function Movies() {

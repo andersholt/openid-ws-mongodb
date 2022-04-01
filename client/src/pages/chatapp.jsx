@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ProfileContext } from "../hooks/loginHook";
+import { ProfileContext } from "../components/loginProvider";
 
 function ChatMessage({ chat: { author, message } }) {
   return (
