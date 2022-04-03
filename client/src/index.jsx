@@ -3,9 +3,10 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { fetchJSON } from "./hooks/global";
 import {
-  LoginCallback,
-  LoginProvider,
+  LoginCallbackMicrosoft,
+  LoginCallbackGoogle,
   LoginMicrosoft,
+  LoginProvider,
   ProfileContext,
 } from "./components/loginProvider";
 import { FrontPage } from "./pages/frontpage";
@@ -20,14 +21,24 @@ function Application() {
 
   async function loadLoginInfo() {
     setLoading(true);
-    setLogin(await fetchJSON("/api/login"));
+    const config = await fetchJSON("/api/login/config");
+
+    const loginMicrosoft = await fetchJSON("/api/login/microsoft");
+    const loginGoogle = await fetchJSON("/api/login/google");
+
+    let userinfo;
+    if (loginGoogle.userinfo) {
+      userinfo = loginGoogle.userinfo;
+    } else if (loginMicrosoft.userinfo) {
+      userinfo = loginMicrosoft.userinfo;
+    }
+
+    setLogin({ config, userinfo });
     setLoading(false);
   }
-
   if (loading) {
     return <h1>Please wait</h1>;
   }
-
   return (
     <ProfileContext.Provider value={login}>
       <BrowserRouter>
@@ -39,8 +50,13 @@ function Application() {
           <Route path={"/login/microsoft"} element={<LoginMicrosoft />} />
           <Route path={"/movies"} element={<Movies />} />
           <Route
-            path={"/login/:identityProvider/callback"}
-            element={<LoginCallback reload={loadLoginInfo} />}
+            path={"/login/google/callback"}
+            element={<LoginCallbackGoogle reload={loadLoginInfo} />}
+          />
+
+          <Route
+            path={"/login/microsoft/callback"}
+            element={<LoginCallbackMicrosoft reload={loadLoginInfo} />}
           />
         </Routes>
       </BrowserRouter>

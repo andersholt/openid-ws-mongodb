@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { ProfileContext } from "../components/loginProvider";
 import { Link } from "react-router-dom";
-import { Login } from "../components/login";
+import { Login } from "./login";
 
 export function Profile() {
   const { userinfo } = useContext(ProfileContext);
-
+  console.log(userinfo);
   return (
     <div>
       {!userinfo && <Login />}

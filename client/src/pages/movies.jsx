@@ -1,5 +1,5 @@
 import { ListMovies } from "../components/moviesList";
-import { Login } from "../components/login";
+import { Login } from "./login";
 import React, { useContext } from "react";
 import { ProfileContext } from "../components/loginProvider";
 import { AddMovie } from "../components/addMovie";
