@@ -9,8 +9,8 @@ export function AddMovie() {
 
     console.log(title);
     await fetchJSON("/api/movies", {
-      method: "POST",
-      json: "TEST",
+      method: "post",
+      body: title,
     });
   }
 

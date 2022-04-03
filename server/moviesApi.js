@@ -34,6 +34,7 @@ export function MoviesApi(mongoDatabase) {
 
   router.post("/api/movies", (req, res) => {
     const { title } = req.body;
+    console.log(req.body);
     console.log("Posting");
     mongoDatabase.collection("movies").insertOne({
       title,

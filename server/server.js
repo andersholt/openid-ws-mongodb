@@ -85,6 +85,10 @@ app.get("/api/login/google", async (req, res) => {
   } catch (error) {
     console.error({ error });
   }
+  if (userinfo !== undefined) {
+    userinfo.usertype = "google";
+  }
+
   res.json({ userinfo, oauth_config: oauth_config.google }).status(200);
 });
 
@@ -106,7 +110,9 @@ app.get("/api/login/microsoft", async (req, res) => {
   } catch (error) {
     console.error({ error });
   }
-
+  if (userinfo !== undefined) {
+    userinfo.usertype = "kristiania";
+  }
   res.json({ userinfo }).status(200);
 });
 

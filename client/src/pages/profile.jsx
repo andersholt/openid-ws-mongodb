@@ -14,9 +14,12 @@ export function Profile() {
           <h1>
             Profile for {userinfo.name} ({userinfo.email})
           </h1>
-          <div>
+          {userinfo.picture && (
             <img src={userinfo.picture} alt="Profile picture" />
-          </div>
+          )}
+          {userinfo.usertype === "kristiania" && (
+            <p>This user is certified by Kristiania University College</p>
+          )}
         </div>
       )}
     </div>

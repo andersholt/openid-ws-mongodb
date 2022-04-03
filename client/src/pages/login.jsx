@@ -6,10 +6,10 @@ export function Login() {
     <div>
       <h1>You need to log in to access this page!</h1>
       <div>
-        <Link to={"/login/google"}>Log in Google</Link>
+        <Link to={"/login/google"}>Log in with Google user</Link>
       </div>
       <div>
-        <Link to={"/login/microsoft"}>Log in Microsoft</Link>
+        <Link to={"/login/microsoft"}>Log in with your Kristiania user</Link>
       </div>
     </div>
   );
