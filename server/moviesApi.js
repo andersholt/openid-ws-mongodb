@@ -32,12 +32,15 @@ export function MoviesApi(mongoDatabase) {
     res.json(movies);
   });
 
-  router.post("/api/movies", (req, res) => {
-    const { title } = req.body;
+  router.post("/add", (req, res) => {
+    const { title, plot, rating, countries } = req.body;
     console.log(req.body);
-    console.log("Posting");
+
     mongoDatabase.collection("movies").insertOne({
       title,
+      plot,
+      rating,
+      countries,
     });
     res.sendStatus(204);
   });
@@ -61,14 +64,11 @@ export function MoviesApi(mongoDatabase) {
       .sort({
         metacritic: -1,
       })
-      .map(({ title, year, plot, genre, poster, imdb, countries }) => ({
+      .map(({ title, plot, poster, imdb }) => ({
         title,
-        year,
         plot,
-        genre,
         poster,
         imdb,
-        countries,
       }))
       .limit(50)
       .toArray();

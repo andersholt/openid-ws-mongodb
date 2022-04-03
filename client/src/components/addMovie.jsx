@@ -3,15 +3,23 @@ import { fetchJSON } from "../hooks/global";
 
 export function AddMovie() {
   const [title, setTitle] = useState("");
+  const [plot, setPlot] = useState("");
+  const [countries, setCountries] = useState([]);
+  const [rating, setRating] = useState({});
 
   async function handleNewMovie(event) {
-    setTitle(event.target.title);
+    event.preventDefault();
 
-    console.log(title);
-    await fetchJSON("/api/movies", {
+    await fetch("/api/movies/add", {
       method: "post",
-      body: title,
+      body: new URLSearchParams({
+        title,
+        plot,
+        countries,
+        rating,
+      }),
     });
+    setTitle("");
   }
 
   return (
@@ -19,6 +27,17 @@ export function AddMovie() {
       <h2>Add Movie</h2>
       <form onSubmit={handleNewMovie}>
         <input title={title} onChange={(e) => setTitle(e.target.value)} />
+        <input plot={plot} onChange={(e) => setPlot(e.target.value)} />
+        <input
+          countries={countries}
+          onChange={(e) => setCountries([e.target.value])}
+        />
+        <input
+          rating={rating}
+          type={"number"}
+          onChange={(e) => setRating({ imdb: { rating: e.target.value } })}
+        />
+
         <input type="submit" value="Submit" />
       </form>
     </>

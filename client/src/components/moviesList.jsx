@@ -46,21 +46,13 @@ export function ListMovies() {
           {data.map((movie, index) => (
             <div key={index} id="movie-card">
               <h2>{movie.title}</h2>
-              <p>Rating: {movie.imdb.rating}</p>
+              {movie.imdb && <p>Rating: {movie.imdb.rating}</p>}
               {movie.poster && (
                 <img src={movie.poster} style={{ width: "200px" }} />
               )}
               <h4>Plot:</h4>
+              {movie.plot}
               <p>{movie.plot}</p>
-              <h4>Countries</h4>
-
-              {movie.countries && (
-                <>
-                  {movie.countries.map((country, index) => (
-                    <div key={index}> - {country} </div>
-                  ))}
-                </>
-              )}
             </div>
           ))}
         </div>

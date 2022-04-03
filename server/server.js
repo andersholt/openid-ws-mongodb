@@ -5,8 +5,11 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import fetch from "node-fetch";
 import { MoviesApi } from "./moviesApi.js";
+import { ChatApi } from "./chatApi.js";
+
 import { MongoClient } from "mongodb";
 import { WebSocketServer } from "ws";
+
 dotenv.config();
 const app = express();
 app.use(bodyParser.urlencoded());
@@ -17,16 +20,23 @@ const sockets = [];
 const wsServer = new WebSocketServer({ noServer: true });
 wsServer.on("connect", (socket) => {
   sockets.push(socket);
-  socket.send(JSON.stringify({ author: "Server", message: "Hello there" }));
+  socket.send(
+    JSON.stringify({
+      author: "Server",
+      message: "Hello there",
+      timestamp: Date.now(),
+    })
+  );
   socket.on("message", (data) => {
-    const { author, message } = JSON.parse(data);
+    const { author, message, timestamp } = JSON.parse(data);
     for (const recipient of sockets) {
-      recipient.send(JSON.stringify({ author, message }));
+      recipient.send(JSON.stringify({ author, message, timestamp }));
     }
   });
 });
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
+
 mongoClient.connect().then(async () => {
   console.log("Connected to MongoDB");
   await mongoClient.db().admin().listDatabases();
@@ -36,7 +46,7 @@ mongoClient.connect().then(async () => {
   );
   app.use(
     "/api/chat",
-    MoviesApi(mongoClient.db(process.env.MONGO_CHATDATABASE || "chat_app"))
+    ChatApi(mongoClient.db(process.env.MONGO_CHATDATABASE || "chat_app"))
   );
 });
 const oauth_config_google = {
