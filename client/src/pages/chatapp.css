@@ -1,0 +1,112 @@
+#chat{
+    margin-right: auto;
+    margin-left: auto;
+    width: 400px;
+    height: 100vh;
+    position: relative;
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    padding-bottom: 20px;
+    height: 80vh;
+
+}
+#chat main{
+    padding: 20px;
+    overflow-y: scroll;
+    max-height: 68vh;
+
+}
+
+#chat #header{
+    border-radius: 10px 10px 0px 0px;
+    background-color: darkslateblue;
+    color: white;
+    height: 50px;
+
+}
+#chat #header h1{
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 5px;
+}
+#chat main #chatmessage{
+    width: fit-content;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+#chat main #chatmessage #authorMessage{
+    color: white;
+    width: fit-content;
+    padding-left: 5px;
+    padding-right: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+#chat main #chatmessage p{
+    padding-left: 10px;
+    margin: 0px;
+    border-radius: 4px;
+}
+
+#chat main #chatmessage strong{
+    padding-left: 10px;
+    margin: 0px;
+    border-radius: 4px;
+}
+
+
+div footer {
+    width: 400px;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
+    border-radius: 0px 0px 6px 6px;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+}
+
+div footer form input{
+    width: 310px;
+    height: 40px;
+    padding-right: 0px;
+    border-radius: 20px 0px 0px 20px;
+    border: white;
+    margin-left: 10px;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+    padding-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
+}
+
+div footer form button{
+    margin-right: 10px;
+    height: 40px;
+    color: white;
+    background-color:darkslateblue;
+    border-radius: 0px 10px 10px 0px;
+    border: none;
+    width: 60px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
