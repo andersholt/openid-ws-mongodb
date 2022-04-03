@@ -2,30 +2,48 @@ import React, { useContext, useEffect, useState } from "react";
 import { ProfileContext } from "../components/loginProvider";
 import "./chatapp.css";
 import { Login } from "./login";
-let lastTimestamp;
+let lastTimestamp = undefined;
+let lastAuthor = undefined;
 function ChatMessage({ chat: { author, message, timestamp } }) {
   let humanDateFormat = undefined;
-  if (lastTimestamp + 300 > timestamp || lastTimestamp === undefined) {
+  let showName = true;
+
+  if (lastTimestamp + 300000 < timestamp || lastTimestamp === undefined) {
     const dateObject = new Date(timestamp);
     humanDateFormat = dateObject.toLocaleString();
   }
+  if (lastAuthor === author && humanDateFormat === undefined) {
+    showName = false;
+  }
+
+  lastAuthor = author;
   lastTimestamp = timestamp;
 
   const { userinfo } = useContext(ProfileContext);
 
   if (userinfo.name === author) {
-    console.log("you");
     return (
       <div
         id="chatmessage"
         style={{
           marginLeft: "auto",
           marginRight: "0px",
+          maxWidth: "40vh",
         }}
       >
-        {humanDateFormat && <p>{humanDateFormat}: </p>}
-        <div id="authorMessage" style={{ backgroundColor: "teal" }}>
-          <strong style={{ color: "#fefefefe" }}>{author}: </strong>
+        {humanDateFormat && (
+          <p style={{ fontSize: "small" }}>{humanDateFormat} </p>
+        )}
+        {showName && <strong style={{ color: "black" }}>{author} </strong>}
+
+        <div
+          id="authorMessage"
+          style={{
+            backgroundColor: "teal",
+            marginRight: "0vh",
+            marginLeft: "auto",
+          }}
+        >
           <p>{message}</p>
         </div>
       </div>
@@ -37,14 +55,23 @@ function ChatMessage({ chat: { author, message, timestamp } }) {
         style={{
           marginLeft: "0px",
           marginRight: "auto",
+          maxWidth: "40vh",
         }}
       >
-        {humanDateFormat && <p>{humanDateFormat}: </p>}
+        {humanDateFormat && (
+          <p style={{ fontSize: "small" }}>{humanDateFormat}: </p>
+        )}
+        {showName && <strong style={{ color: "black" }}>{author}: </strong>}
+
         <div
           id="authorMessage"
-          style={{ backgroundColor: "#FFD124", color: "black" }}
+          style={{
+            backgroundColor: "#FFD124",
+            color: "black",
+            marginRight: "auto",
+            marginLeft: "0vh",
+          }}
         >
-          <strong>{author}: </strong>
           <p>{message}</p>
         </div>
       </div>
@@ -123,7 +150,11 @@ export function ChatApplication() {
       </div>
       <footer>
         <form onSubmit={handleNewMessage}>
-          <input value={message} onChange={(e) => setMessage(e.target.value)} />
+          <input
+            placeholder="Message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
           <button>Submit</button>
         </form>
       </footer>

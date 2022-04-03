@@ -1,20 +1,21 @@
+
+
 #chat{
     margin-right: auto;
     margin-left: auto;
-    width: 400px;
-    height: 100vh;
+    width: 30vw;
+    height: 83vh;
     position: relative;
-    /* Add shadows to create the "card" effect */
     box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     padding-bottom: 20px;
-    height: 80vh;
+    min-width: 300px;
 
 }
 #chat main{
     padding: 20px;
     overflow-y: scroll;
-    max-height: 68vh;
+    max-height: 58vh;
 
 }
 
@@ -23,7 +24,6 @@
     background-color: darkslateblue;
     color: white;
     height: 50px;
-
 }
 #chat #header h1{
     width: fit-content;
@@ -34,66 +34,75 @@
 #chat main #chatmessage{
     width: fit-content;
     border-radius: 4px;
-    margin-bottom: 10px;
+    margin-bottom: 1vh;
+
 }
 #chat main #chatmessage #authorMessage{
     color: white;
     width: fit-content;
-    padding-left: 5px;
-    padding-right: 10px;
     border-radius: 4px;
-    margin-bottom: 20px;
+    margin: 0px;
+    padding-right: 1vw;
 }
 
 #chat main #chatmessage p{
-    padding-left: 10px;
+
     margin: 0px;
-    border-radius: 4px;
+    padding-bottom: 0vh;
+}
+
+#chat main #chatmessage div p{
+    padding-left: 1vw;
+    margin: 0px;
+    border-radius: 1vw;
+    padding-bottom: 0vh;
 }
 
 #chat main #chatmessage strong{
-    padding-left: 10px;
-    margin: 0px;
-    border-radius: 4px;
+    border-radius: 1vw;
 }
 
 
 div footer {
-    width: 400px;
+    width: 30vw;
     margin-right: auto;
     margin-left: auto;
     position: relative;
     border-radius: 0px 0px 6px 6px;
     box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+    min-width: 300px;
+
+
 }
 
 div footer form input{
-    width: 310px;
-    height: 40px;
-    padding-right: 0px;
+    width: 22vw;
+    height: 6vh;
     border-radius: 20px 0px 0px 20px;
     border: white;
-    margin-left: 10px;
+    margin-left: 1vw;
     box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
-    padding-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    padding-left: 1vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
     border: none;
+    min-width: 200px;
 }
 
 div footer form button{
-    margin-right: 10px;
-    height: 40px;
+    margin-right: 1vw;
+    height: 6vh;
     color: white;
     background-color:darkslateblue;
     border-radius: 0px 10px 10px 0px;
     border: none;
-    width: 60px;
+    width: 4vw;
+    min-width: fit-content;
 }
 
 /* width */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 1vw;
 }
 
 /* Track */
