@@ -17,6 +17,7 @@ import { ChatApplication } from "./pages/chatapp";
 function Application() {
   const [loading, setLoading] = useState(true);
   const [login, setLogin] = useState();
+  const [loggedid, setLoggedin] = useState(false);
   useEffect(loadLoginInfo, []);
 
   async function loadLoginInfo() {
@@ -27,10 +28,15 @@ function Application() {
     const loginGoogle = await fetchJSON("/api/login/google");
 
     let userinfo;
+
     if (loginGoogle.userinfo) {
       userinfo = loginGoogle.userinfo;
     } else if (loginMicrosoft.userinfo) {
       userinfo = loginMicrosoft.userinfo;
+    }
+
+    if (userinfo !== undefined) {
+      setLoggedin(true);
     }
 
     setLogin({ config, userinfo });

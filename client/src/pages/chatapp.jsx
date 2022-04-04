@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { ProfileContext } from "../components/loginProvider";
 import "./chatapp.css";
 import { Login } from "./login";
+import { Navbar } from "../components/navbar";
 let lastTimestamp = undefined;
 let lastAuthor = undefined;
 function ChatMessage({ chat: { author, message, timestamp } }) {
@@ -12,7 +13,7 @@ function ChatMessage({ chat: { author, message, timestamp } }) {
     const dateObject = new Date(timestamp);
     humanDateFormat = dateObject.toLocaleString();
   }
-  if (lastAuthor === author && humanDateFormat === undefined) {
+  if (lastAuthor === author) {
     showName = false;
   }
 
@@ -66,7 +67,7 @@ function ChatMessage({ chat: { author, message, timestamp } }) {
         <div
           id="authorMessage"
           style={{
-            backgroundColor: "#FFD124",
+            backgroundColor: "#E2D1F9",
             color: "black",
             marginRight: "auto",
             marginLeft: "0vh",
@@ -124,40 +125,46 @@ export function ChatApplication() {
       message,
       timestamp: Date.now(),
     };
-    ws.send(JSON.stringify(chatMessage));
-    await fetch("/api/chat", {
-      method: "post",
-      body: new URLSearchParams({
-        author: chatMessage.author,
-        message: chatMessage.message,
-        timestamp: chatMessage.timestamp,
-      }),
-    });
+    if (message !== "") {
+      ws.send(JSON.stringify(chatMessage));
+      await fetch("/api/chat", {
+        method: "post",
+        body: new URLSearchParams({
+          author: chatMessage.author,
+          message: chatMessage.message,
+          timestamp: chatMessage.timestamp,
+        }),
+      });
+    }
+
     setMessage("");
   }
 
   return (
     <div>
-      <div id="chat">
-        <div id={"header"}>
-          <h1>MyOpenChat</h1>
+      <Navbar />
+      <div id="chatbox">
+        <div id="chat">
+          <div id={"header"}>
+            <h1>MyOpenChat</h1>
+          </div>
+          <main>
+            {chatLog.map((chat, index) => (
+              <ChatMessage key={index} chat={chat} />
+            ))}
+          </main>
         </div>
-        <main>
-          {chatLog.map((chat, index) => (
-            <ChatMessage key={index} chat={chat} />
-          ))}
-        </main>
+        <footer>
+          <form onSubmit={handleNewMessage}>
+            <input
+              placeholder="Message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <button>Submit</button>
+          </form>
+        </footer>
       </div>
-      <footer>
-        <form onSubmit={handleNewMessage}>
-          <input
-            placeholder="Message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button>Submit</button>
-        </form>
-      </footer>
     </div>
   );
 }
