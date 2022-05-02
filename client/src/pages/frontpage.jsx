@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { ProfileContext } from "../components/loginProvider";
 import { Link } from "react-router-dom";
-import { Login } from "../pages/login";
-import { Navbar } from "../components/navbar";
+import { Login } from "./login";
 
 export async function handleLogout() {
   await fetch("/api/login", { method: "delete" });
@@ -15,7 +14,6 @@ export function FrontPage() {
 
   return (
     <div>
-      <Navbar />
       {!userinfo && <Login />}
       {userinfo && (
         <div>

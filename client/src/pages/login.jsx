@@ -1,11 +1,8 @@
 import { Link } from "react-router-dom";
 import React from "react";
-import "./login.css";
-import { Navbar } from "../components/navbar";
 export function Login() {
   return (
     <div>
-      <Navbar />
       <div>
         <h1>You need to log in to access this page!</h1>
         <div>

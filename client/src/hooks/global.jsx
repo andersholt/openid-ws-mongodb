@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 
 export async function fetchJSON(url) {
   const res = await fetch(url);
+
+  console.log(url)
+
   if (!res.ok) {
     throw new Error(`Failed ${res.status}`);
   }

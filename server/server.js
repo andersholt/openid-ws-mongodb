@@ -4,11 +4,6 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import fetch from "node-fetch";
-import { MoviesApi } from "./moviesApi.js";
-import { ChatApi } from "./chatApi.js";
-
-import { MongoClient } from "mongodb";
-import { WebSocketServer } from "ws";
 
 dotenv.config();
 const app = express();
@@ -17,31 +12,6 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 const sockets = [];
 
-const wsServer = new WebSocketServer({ noServer: true });
-wsServer.on("connect", (socket) => {
-  sockets.push(socket);
-  socket.on("message", (data) => {
-    const { author, message, timestamp } = JSON.parse(data);
-    for (const recipient of sockets) {
-      recipient.send(JSON.stringify({ author, message, timestamp }));
-    }
-  });
-});
-
-const mongoClient = new MongoClient(process.env.MONGODB_URL);
-
-mongoClient.connect().then(async () => {
-  console.log("Connected to MongoDB");
-  await mongoClient.db().admin().listDatabases();
-  app.use(
-    "/api/movies",
-    MoviesApi(mongoClient.db(process.env.MONGO_MOVIEDATABASE || "sample_mflix"))
-  );
-  app.use(
-    "/api/chat",
-    ChatApi(mongoClient.db(process.env.MONGO_CHATDATABASE || "chat_app"))
-  );
-});
 const oauth_config_google = {
   discovery_url: "https://accounts.google.com/.well-known/openid-configuration",
   client_id: process.env.CLIENT_ID_GOOGLE,
