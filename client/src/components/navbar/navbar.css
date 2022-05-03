@@ -1,0 +1,48 @@
+.navbar {
+    margin-top: 0;
+    padding: 0;
+    display: flex;
+    border-bottom: solid black;
+}
+
+.navbar .pages {
+    margin-left: 10px;
+}
+
+.navbar .pages a:hover, .navbar .profile-stuff button:hover, .navbar .profile-stuff a:hover {
+    background: black;
+    color: white;
+}
+
+.navbar .pages a:active, .navbar .profile-stuff button:active, .navbar .profile-stuff a:active {
+    background: black;
+    color: white;
+}
+
+.navbar .profile-stuff {
+    margin-right: 10px;
+    margin-left: auto;
+}
+
+.navbar .profile-stuff button, .navbar .profile-stuff a, .navbar .pages a {
+    font-size: 15px;
+    font-weight: lighter;
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-decoration: none;
+    color: black;
+    margin: auto 3px auto auto;
+    transition: all .2s ease-in-out;
+    background: none;
+    border: none;
+    height: 50px;
+}
+
+.navbar .profile-stuff img {
+    vertical-align: middle;
+    display: inline-block;
+    margin: auto 3px auto auto;
+    height: 40px;
+    border-radius: 100%;
+}

@@ -1,0 +1,25 @@
+.login {
+    margin: 5vh auto auto auto;
+    width: fit-content;
+    text-align: center;
+    border: solid black;
+    padding: 20px;
+    height: fit-content;
+    background: black;
+}
+
+.login h1 {
+    color: white;
+}
+
+.login a {
+    display: inline-block;
+    color: white;
+    padding: 10px;
+    transition: all .1s ease-in-out;
+}
+
+.login a:hover {
+    color: black;
+    background: white;
+}

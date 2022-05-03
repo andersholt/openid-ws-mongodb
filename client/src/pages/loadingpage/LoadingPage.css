@@ -1,0 +1,61 @@
+
+.loading-container {
+    margin-top: 40vh;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    align-items: center;
+    height: fit-content;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(1, 1) translateY(0);
+    }
+    10% {
+        transform: scale(1.1, .9) translateY(0);
+    }
+    30% {
+        transform: scale(.9, 1.1) translateY(-10px);
+    }
+    50% {
+        transform: scale(1.05, .95) translateY(0);
+    }
+    57% {
+        transform: scale(1, 1) translateY(-1px);
+    }
+    64% {
+        transform: scale(1, 1) translateY(0);
+    }
+    100% {
+        transform: scale(1, 1) translateY(0);
+    }
+}
+
+.dot-1 {
+    background: black;
+    height: 30px;
+    width: 30px;
+    margin: 10px;
+    animation: bounce 1s cubic-bezier(0.3, 0.8, 0.4, 1) infinite
+}
+
+.dot-2 {
+    background: black;
+    height: 30px;
+    width: 30px;
+    margin: 10px;
+    animation: bounce 1s cubic-bezier(0.3, 0.8, 0.4, 1) infinite;
+    animation-delay: 40ms;
+}
+
+.dot-3 {
+    background: black;
+    height: 30px;
+    width: 30px;
+    margin: 10px;
+    animation: bounce 1s cubic-bezier(0.3, 0.8, 0.4, 1) infinite;
+    animation-delay: 80ms;
+}
+

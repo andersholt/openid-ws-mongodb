@@ -1,67 +1,53 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { fetchJSON } from "./hooks/global";
-import {
-  LoginCallbackMicrosoft,
-  LoginCallbackGoogle,
-  LoginMicrosoft,
-  LoginProvider,
-  ProfileContext,
-} from "./components/loginProvider";
-import { FrontPage } from "./pages/frontpage";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {fetchJSON} from "./hooks/global";
+import {LoginCallback, LoginProvider, ProfileContext,} from "./hooks/loginProvider";
+import {FrontPage} from "./pages/frontpage/frontpage";
+import LoadingAnimation from "./pages/loadingpage/LoadingPage";
+import "./index.css"
+import {ProfilePage} from "./pages/profilepage/profilepage";
 
 function Application() {
-  const [loading, setLoading] = useState(true);
-  const [login, setLogin] = useState();
-  const [loggedid, setLoggedin] = useState(false);
-  useEffect(loadLoginInfo, []);
+    const [loading, setLoading] = useState(true);
+    const [login, setLogin] = useState();
+    useEffect(loadLoginInfo, []);
 
-  async function loadLoginInfo() {
-    setLoading(true);
-    const config = await fetchJSON("/api/login/config");
-
-    const loginMicrosoft = await fetchJSON("/api/login/microsoft");
-    const loginGoogle = await fetchJSON("/api/login/google");
-
-    let userinfo;
-
-    if (loginGoogle.userinfo) {
-      userinfo = loginGoogle.userinfo;
-    } else if (loginMicrosoft.userinfo) {
-      userinfo = loginMicrosoft.userinfo;
+    async function loadLoginInfo() {
+        const provider = sessionStorage.getItem('provider');
+        setLoading(true);
+        let userinfo = undefined
+        const config = await fetchJSON("/api/login/config");
+        if (provider !== null) {
+            const login = await fetchJSON("/api/login/" + provider);
+            userinfo = login.userinfo
+        }
+        setLogin({config, userinfo});
+        setLoading(false);
     }
 
-    if (userinfo !== undefined) {
-      setLoggedin(true);
+    if (loading) {
+        return <LoadingAnimation/>;
     }
+    return (
+        <ProfileContext.Provider value={login}>
+            <BrowserRouter>
+                <Routes>
+                    <Route path={"/"} element={<FrontPage reload={loadLoginInfo}/>}/>
+                    <Route path={"/login/:provider"} element={<LoginProvider/>}/>
+                    <Route
+                        path={"/login/:provider/callback"}
+                        element={<LoginCallback reload={loadLoginInfo}/>}
+                    />
+                    <Route
+                        path={"/profile"}
+                        element={<ProfilePage/>}
+                    />
+                </Routes>
+            </BrowserRouter>
+        </ProfileContext.Provider>
 
-    setLogin({ config, userinfo });
-    setLoading(false);
-  }
-  if (loading) {
-    return <h1>Please wait</h1>;
-  }
-  return (
-    <ProfileContext.Provider value={login}>
-      <BrowserRouter>
-        <Routes>
-          <Route path={"/"} element={<FrontPage reload={loadLoginInfo} />} />
-          <Route path={"/login/google"} element={<LoginProvider />} />
-          <Route path={"/login/microsoft"} element={<LoginMicrosoft />} />
-          <Route
-            path={"/login/google/callback"}
-            element={<LoginCallbackGoogle reload={loadLoginInfo} />}
-          />
-
-          <Route
-            path={"/login/microsoft/callback"}
-            element={<LoginCallbackMicrosoft reload={loadLoginInfo} />}
-          />
-        </Routes>
-      </BrowserRouter>
-    </ProfileContext.Provider>
-  );
+    );
 }
 
-ReactDOM.render(<Application />, document.getElementById("app"));
+ReactDOM.render(<Application/>, document.getElementById("app"));
