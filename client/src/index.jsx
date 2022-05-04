@@ -3,10 +3,11 @@ import ReactDOM from "react-dom";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {fetchJSON} from "./hooks/global";
 import {LoginCallback, LoginProvider, ProfileContext,} from "./hooks/loginProvider";
-import {FrontPage} from "./pages/frontpage/frontpage";
+import {ArticleWrite, FrontPage} from "./pages/frontpage/frontpage";
 import LoadingAnimation from "./pages/loadingpage/LoadingPage";
 import "./index.css"
 import {ProfilePage} from "./pages/profilepage/profilepage";
+import {LoginPage} from "./pages/loginpage/loginPage";
 
 function Application() {
     const [loading, setLoading] = useState(true);
@@ -35,6 +36,8 @@ function Application() {
                 <Routes>
                     <Route path={"/"} element={<FrontPage reload={loadLoginInfo}/>}/>
                     <Route path={"/login/:provider"} element={<LoginProvider/>}/>
+                    <Route path={"/article/new"} element={<ArticleWrite/>}/>
+                    <Route path={"/login"} element={<LoginPage/>}/>
                     <Route
                         path={"/login/:provider/callback"}
                         element={<LoginCallback reload={loadLoginInfo}/>}

@@ -9,21 +9,48 @@ export async function handleLogout() {
     window.location.reload();
 }
 
-export function Navbar() {
+
+export function Navbar({editMode, setEditMode}) {
     const {userinfo} = useContext(ProfileContext)
+
+    function switchEditMode() {
+        if (editMode === true) {
+            setEditMode(false)
+        } else {
+            setEditMode(true)
+        }
+    }
+
+    let editButtonText = "Enter editmode"
+    if (editMode === true) {
+        editButtonText = "Leave editmode"
+    }
+
     return (
         <div className={"navbar"}>
             <div className={"pages"}>
+                <h2>Kristiania News</h2>
                 <Link to={"/"}><p>Home</p></Link>
-                <Link to={"/"}><p>Page 2</p></Link>
-                <Link to={"/"}><p>Page 3</p></Link>
+                {(userinfo && userinfo.usertype) === "kristiania" &&
+                    <>
+                        <Link to={"/article/new"}><p>Write new article</p></Link>
+                        <button onClick={switchEditMode}>{editButtonText}</button>
+                    </>
+                }
             </div>
 
             <div className={"profile-stuff"}>
-                <Link to={"/profile"}><p>Profile</p></Link>
-                <button onClick={handleLogout}>Log out</button>
-                {(userinfo.picture && userinfo.usertype !== "kristiania") &&
-                    <img src={userinfo.picture}/>
+                {userinfo &&
+                    <>
+                        <Link to={"/profile"}><p>Profile</p></Link>
+                        <button onClick={handleLogout}>Log out</button>
+                        {(userinfo.picture && userinfo.usertype !== "kristiania") &&
+                            <img src={userinfo.picture}/>
+                        }
+                    </>
+                }
+                {!userinfo &&
+                    <Link to={"/login"}>Login</Link>
                 }
             </div>
         </div>

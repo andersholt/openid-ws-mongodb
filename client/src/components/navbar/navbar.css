@@ -39,6 +39,11 @@
     height: 50px;
 }
 
+.navbar .pages h2 {
+    display: inline-block;
+    font-size: 20px;
+}
+
 .navbar .profile-stuff img {
     vertical-align: middle;
     display: inline-block;
