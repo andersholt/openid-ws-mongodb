@@ -32,12 +32,12 @@ export function MoviesApi(mongoDatabase) {
     res.json(movies);
   });
 
-  router.post("/", (req, res) => {
+  router.post("/", async (req, res) => {
     const { title } = req.body;
-    mongoDatabase.collection(movies).insertOne({
+    await mongoDatabase.collection("movies").insertOne({
       title,
     });
-    res.sendStatus(204);
+    res.sendStatus(201);
   });
 
   router.get("/search/*", async (req, res) => {
@@ -70,8 +70,8 @@ export function MoviesApi(mongoDatabase) {
       }))
       .limit(50)
       .toArray();
-    if (!movies) {
-      res.status(404).json({ errors });
+    if (!movies || movies.length === 0) {
+      res.status(404).json({ error: "Not found" });
       return;
     }
     res.json({ movies });
