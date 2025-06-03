@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 
-export async function fetchJSON(url) {
-  const res = await fetch(url);
+export async function fetchJSON(url, options = {}) {
+  const { json, ...fetchOptions } = options;
+  if (json !== undefined) {
+    fetchOptions.headers = {
+      "Content-Type": "application/json",
+      ...(fetchOptions.headers || {}),
+    };
+    fetchOptions.body = JSON.stringify(json);
+  }
+  const res = await fetch(url, fetchOptions);
   if (!res.ok) {
     throw new Error(`Failed ${res.status}`);
   }
